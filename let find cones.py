@@ -20,7 +20,7 @@ def convexHullIsPointingUp(hull):
     
     aspectRatio =  float(w)/h
     
-    if aspectRatio > 1.2:
+    if aspectRatio > 0.8:
         print 'nope ->aspectRatio is > 0.8 it =',aspectRatio
         return False
  
@@ -86,7 +86,7 @@ print 'step one'
 print 'looking for cones'
 print 'Load an color image' 
 #load in a image
-img = cv2.imread('c://cone//images/14.jpg',-1)
+img = cv2.imread('./images/14.jpg',-1)
 
 print 'Image shape ',img.shape
 cv2.imshow('image',img)

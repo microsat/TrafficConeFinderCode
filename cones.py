@@ -134,7 +134,7 @@ def testcone(img,file=''):
 
 
 # get the files
-files = glob.glob('c:\cone\images\*.jpg')
+files = glob.glob('.\images\*.jpg')
 
 for file in files:
     print 'Processing file ' + file
