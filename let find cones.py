@@ -105,7 +105,7 @@ imgThreshHigh = cv2.inRange(imgHSV,high_redl,high_redh)
 
 #combine low range red thresh and high range red thresh
 imgThresh = cv2.bitwise_or(imgThreshLow,imgThreshHigh)
-cv2.imshow('imgThresh ',imgThresh)
+cv2.imshow('imgThresh ', imgThresh)
 
 #clone/copy thresh image before smoothing
 imgThreshSmoothed = imgThresh.copy()
