@@ -1,8 +1,26 @@
 import numpy as np
 import cv2
-
 import glob
+import os
 
+def is_cv2():
+    # if we are using OpenCV 2, then our cv2.__version__ will start
+    # with '2.'
+    return check_opencv_version("2.")
+
+def is_cv3():
+    # if we are using OpenCV 3.X, then our cv2.__version__ will start
+    # with '3.'
+    return check_opencv_version("3.")
+
+def check_opencv_version(major, lib=None):
+    # if the supplied library is None, import OpenCV
+    if lib is None:
+        import cv2 as lib
+
+    # return whether or not the current OpenCV version matches the
+    # major version number
+    return lib.__version__.startswith(major)
 
 def convexHullIsPointingUp(hull):
     x, y, w, h = cv2.boundingRect(hull)
@@ -82,7 +100,12 @@ def testcone(img, file=''):
 
     imgCanny = cv2.Canny(imgThreshSmoothed, 160, 80)
     cv2.imshow('imgCanny ', imgCanny)
-    image, contours, hierarchy = cv2.findContours(imgCanny,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+    contours = None
+
+    if is_cv2():
+        contours, hierarchy = cv2.findContours(imgCanny,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+    else:
+        image, contours, hierarchy = cv2.findContours(imgCanny,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
 
     listOfContours = []
     if len(contours) != 0:
@@ -109,8 +132,16 @@ def testcone(img, file=''):
                 # print '-Point up-'
                 listOfCones.append(hull)
 
-    imghull = cv2.drawContours(img, listOfCones, -1, (0, 255, 0), 3)
+    imghull = None
+
+    if is_cv2():
+        imghull = img.copy()
+        cv2.drawContours(imghull, listOfCones, -1, (0, 255, 0), 3)
+    else:
+        imghull = cv2.drawContours(img, listOfCones, -1, (0, 255, 0), 3)
+
     cv2.imshow('hull ', imghull)
+
     # cv2.imshow('hull 2',imghull2)
 
     # remove any inner overlapping cones
@@ -121,7 +152,7 @@ def testcone(img, file=''):
 
 
 # get the files
-files = glob.glob('.\images\*.jpg')
+files = glob.glob(os.path.join('.', 'images', '*.jpg'))
 
 for file in files:
     print 'Processing file ' + file
